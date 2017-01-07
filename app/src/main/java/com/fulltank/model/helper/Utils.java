@@ -71,14 +71,18 @@ public class Utils {
 
             } else {
 
-                Intent i = new Intent();
+                ActivityCompat.requestPermissions(activity,
+                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION},
+                        2);
+
+               /* Intent i = new Intent();
                 i.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
                 i.addCategory(Intent.CATEGORY_DEFAULT);
                 i.setData(Uri.parse("package:" + activity.getPackageName()));
                 i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 i.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
                 i.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
-                activity.startActivity(i);
+                activity.startActivity(i);*/
 
                 Log.e("Belum pernah", "dan belum mengizinkan 2");
             }

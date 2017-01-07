@@ -1,22 +1,25 @@
 package com.fulltank;
 
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.RelativeLayout;
 
 import com.fulltank.model.api.RequestServer;
 import com.fulltank.model.helper.GPSHelper;
 import com.fulltank.model.helper.Utils;
+import com.fulltank.model.pojo.StatusRequest;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import okhttp3.RequestBody;
 
-public class FullTankActivity extends AppCompatActivity {
+public class FullTankActivity extends GlobalConstants {
 
-    private GPSHelper gpsHelper;
     private int page = 0;
 
     @Override
@@ -24,11 +27,10 @@ public class FullTankActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_full_tank);
-        RelativeLayout activity_full_tank = (RelativeLayout) findViewById(R.id.activity_full_tank);
+        SwipeRefreshLayout swipe_refresh = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh);
 
-        Utils.checkPermissionGps(FullTankActivity.this, activity_full_tank);
+        Utils.checkPermissionGps(FullTankActivity.this, swipe_refresh);
 
-        gpsHelper = new GPSHelper(FullTankActivity.this);
         gpsHelper.setActionOnLocationChanges(new Runnable() {
             @Override
             public void run() {
@@ -37,7 +39,6 @@ public class FullTankActivity extends AppCompatActivity {
             }
         });
 
-
         RequestServer requestServer = new RequestServer();
 
         Map<String, RequestBody> params = new HashMap<>();
@@ -45,12 +46,15 @@ public class FullTankActivity extends AppCompatActivity {
         params.put("client_secret", Utils.requestBody(BuildConfig.CLIENT_SECRET));
         params.put("v", Utils.requestBody(BuildConfig.TIME));
 
-        requestServer.getPlaceData("-7.79059521,110.36873817", page + "", params);
+        requestServer.getPlaceData(BuildConfig.CLIENT_ID, BuildConfig.CLIENT_SECRET, BuildConfig.TIME, "-7.79059521,110.36873817", page + "", params);
+
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+    @Subscribe
+    public void onMessageEvent(StatusRequest s) {
+        Log.e("sasasa", "=> " + s.pojoPlace.response.groups.get(0).items.size());
+
     }
 
 }

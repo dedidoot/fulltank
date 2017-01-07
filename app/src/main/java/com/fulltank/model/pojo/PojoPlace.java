@@ -1,5 +1,8 @@
 package com.fulltank.model.pojo;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 import java.util.List;
 
 /**
@@ -9,28 +12,21 @@ import java.util.List;
 
 public class PojoPlace {
 
+    @SerializedName("response")
+    @Expose
     public Response response;
 
     public class Response {
 
-        public List<Venues> venues;
+        @SerializedName("groups")
+        @Expose
+        public List<Group_> groups = null;
 
-          public  class Venues {
+        public class Group_ {
 
-            public String name;
-            public Contact contact;
-            public Location location;
-
-              class Contact {
-                public String phone;
-            }
-
-              class Location {
-                public String address;
-                public String city;
-                public double lat;
-                public double lng;
-            }
+            @SerializedName("items")
+            @Expose
+            public List<PojoItemsPlace> items = null;
 
         }
     }

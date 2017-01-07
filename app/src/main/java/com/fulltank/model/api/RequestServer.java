@@ -1,8 +1,10 @@
 package com.fulltank.model.api;
 
-import android.util.Log;
 
 import com.fulltank.model.pojo.PojoPlace;
+import com.fulltank.model.pojo.StatusRequest;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.Map;
 
@@ -21,25 +23,28 @@ public class RequestServer {
     private String limit = "10";
     private String radius = "100000";
 
-    public void getPlaceData(String latlong, String offset, Map<String, RequestBody> params) {
+    public void getPlaceData(String CLIENT_ID, String CLIENT_SECRET, String v, String latlong, String offset, Map<String, RequestBody> params) {
+        final StatusRequest statusRequest = new StatusRequest();
         RequestInterface request = RestClient.createService(RequestInterface.class);
-        request.getPlaceData(latlong, radius, offset, limit, params)
+        request.getPlaceData(CLIENT_ID, CLIENT_SECRET, v, latlong, radius, offset, limit)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<PojoPlace>() {
                     @Override
                     public void onCompleted() {
-                        Log.wtf("onCompleted", "=> ");
+
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        Log.wtf("onError", "=> " + e.getMessage());
+                        statusRequest.throwable = e;
+                        EventBus.getDefault().post(statusRequest);
                     }
 
                     @Override
                     public void onNext(PojoPlace pojoPlace) {
-                        Log.wtf("onNext", "=> " + pojoPlace.response.venues.size());
+                        statusRequest.pojoPlace = pojoPlace;
+                        EventBus.getDefault().post(statusRequest);
                     }
                 });
     }
