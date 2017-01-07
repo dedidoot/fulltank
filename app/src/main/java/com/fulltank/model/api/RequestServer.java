@@ -18,9 +18,12 @@ import rx.schedulers.Schedulers;
 
 public class RequestServer {
 
-    public void getPlaceData(String latlong, Map<String, RequestBody> params) {
+    private String limit = "10";
+    private String radius = "100000";
+
+    public void getPlaceData(String latlong, String offset, Map<String, RequestBody> params) {
         RequestInterface request = RestClient.createService(RequestInterface.class);
-        request.getPlaceData(latlong, params)
+        request.getPlaceData(latlong, radius, offset, limit, params)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<PojoPlace>() {
