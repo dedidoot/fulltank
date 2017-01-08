@@ -20,7 +20,7 @@ import rx.schedulers.Schedulers;
 
 public class RequestServer {
 
-    private String limit = "10";
+    private String limit = "20";
     private String radius = "100000";
 
     public void getPlaceData(String CLIENT_ID, String CLIENT_SECRET, String v, String latlong, String offset ) {

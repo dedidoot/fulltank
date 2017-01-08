@@ -3,9 +3,12 @@ package com.fulltank;
 import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.MenuItem;
+import android.view.View;
 
 import com.fulltank.model.api.RequestServer;
 import com.fulltank.model.helper.Utils;
@@ -23,15 +26,24 @@ public class FullTankActivity extends GlobalConstants {
 
     private int page = 0;
     private AdapterFullTank adapter;
+    private double latitude = 0, longitude = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_full_tank);
+
+        getSupportActionBar().setTitle("");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         final SwipeRefreshLayout swipe_refresh = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh);
-        swipe_refresh.setRefreshing(true);
+        swipe_refresh.setColorSchemeResources(R.color.colorPrimaryDark, R.color.colorPrimaryDark, R.color.colorPrimaryDark);
+
         RecyclerView recycler_view = (RecyclerView) findViewById(R.id.recycler_view);
+
+        latitude = getIntent().getDoubleExtra("latitude", 0);
+        longitude = getIntent().getDoubleExtra("longitude", 0);
 
         GridLayoutManager gridLayoutManager = new GridLayoutManager(FullTankActivity.this, 2);
         List<PojoItemsPlace> items = new ArrayList<>();
@@ -42,7 +54,7 @@ public class FullTankActivity extends GlobalConstants {
         adapter = new AdapterFullTank(recycler_view, items, new LoadMoreRecyclerNoHeaderNoFooter.OnLoadMoreListener() {
             @Override
             public void onLoadMore() {
-                requestServer.getPlaceData(BuildConfig.CLIENT_ID, BuildConfig.CLIENT_SECRET, BuildConfig.TIME, "-7.79059521,110.36873817", page + "");
+                requestServer.getPlaceData(BuildConfig.CLIENT_ID, BuildConfig.CLIENT_SECRET, BuildConfig.TIME, latitude + "," + longitude, page + "");
             }
         }, gridLayoutManager, null);
 
@@ -50,14 +62,7 @@ public class FullTankActivity extends GlobalConstants {
 
         Utils.checkPermissionGps(FullTankActivity.this, swipe_refresh);
 
-        gpsHelper.setActionOnLocationChanges(new Runnable() {
-            @Override
-            public void run() {
-                Log.e("LOCATION ONE", "latitude: " + gpsHelper.getLatitude() + " longitude: " + gpsHelper.getLongitude());
-            }
-        });
-
-        requestServer.getPlaceData(BuildConfig.CLIENT_ID, BuildConfig.CLIENT_SECRET, BuildConfig.TIME, "-7.79059521,110.36873817", page + "");
+        requestServer.getPlaceData(BuildConfig.CLIENT_ID, BuildConfig.CLIENT_SECRET, BuildConfig.TIME, latitude + "," + longitude, page + "");
 
         swipe_refresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -71,6 +76,9 @@ public class FullTankActivity extends GlobalConstants {
                 }, 1000);
             }
         });
+
+        progressDialog.show();
+
     }
 
 
@@ -78,13 +86,23 @@ public class FullTankActivity extends GlobalConstants {
     public void onMessageEvent(StatusRequest s) {
         if (s != null && s.pojoPlace != null) {
             adapter.addItems(s.pojoPlace.response.groups.get(0).items);
-            page += 10;
+            page += 20;
             adapter.stopLoading();
-            if (s.pojoPlace.response.groups.get(0).items.size() < 10) {
+            if (s.pojoPlace.response.groups.get(0).items.size() < 20) {
                 adapter.setEnableLoadMore(false);
             }
+            progressDialog.dismiss();
         }
 
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 }

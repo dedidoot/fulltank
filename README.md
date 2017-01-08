@@ -1,1 +1,1 @@
-# fulltank Ini adalah project menampilkan data dari api foursquare, melihat tempat berdasarkan titik lokasi tertentu (latitude and longitude) dan dapat melihat tempat trending
+# fulltank Ini adalah project latihan menampilkan data dari api foursquare (https://developer.foursquare.com), melihat tempat berdasarkan titik lokasi tertentu (latitude and longitude) dan dapat melihat tempat yang lagi trending

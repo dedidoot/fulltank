@@ -1,5 +1,6 @@
 package com.fulltank;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
@@ -15,6 +16,7 @@ public class GlobalConstants extends AppCompatActivity {
 
     public EventBus eventBus;
     public GPSHelper gpsHelper;
+    public ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,6 +25,8 @@ public class GlobalConstants extends AppCompatActivity {
         eventBus = EventBus.getDefault();
         eventBus.register(GlobalConstants.this);
         gpsHelper = new GPSHelper(GlobalConstants.this);
+        progressDialog = new ProgressDialog(GlobalConstants.this);
+        progressDialog.setMessage(getString(R.string.memuat));
     }
 
     @Override

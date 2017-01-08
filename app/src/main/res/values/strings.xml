@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">FullTank</string>
+    <string name="memuat">Sedang memuat...</string>
+    <string name="title_activity_maps">Map</string>
+    <string name="pilih_lokasi">Pilih Lokasi</string>
+    <string name="pilihan_lokasi">Pilihan Lokasimu</string>
+    <string name="tampilkan_data">Tampilkan Data</string>
 </resources>
