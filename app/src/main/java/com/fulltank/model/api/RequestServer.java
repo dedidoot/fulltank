@@ -23,7 +23,7 @@ public class RequestServer {
     private String limit = "10";
     private String radius = "100000";
 
-    public void getPlaceData(String CLIENT_ID, String CLIENT_SECRET, String v, String latlong, String offset, Map<String, RequestBody> params) {
+    public void getPlaceData(String CLIENT_ID, String CLIENT_SECRET, String v, String latlong, String offset ) {
         final StatusRequest statusRequest = new StatusRequest();
         RequestInterface request = RestClient.createService(RequestInterface.class);
         request.getPlaceData(CLIENT_ID, CLIENT_SECRET, v, latlong, radius, offset, limit)

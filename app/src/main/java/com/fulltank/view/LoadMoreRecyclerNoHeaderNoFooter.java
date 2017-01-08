@@ -35,7 +35,6 @@ public abstract class LoadMoreRecyclerNoHeaderNoFooter<T> extends RecyclerView.A
         this.dataSet = dataSet;
 
         if (recyclerView.getLayoutManager() instanceof LinearLayoutManager) {
-
             if (grid != null) {
                 grid.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
                     @Override
@@ -57,7 +56,6 @@ public abstract class LoadMoreRecyclerNoHeaderNoFooter<T> extends RecyclerView.A
             recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
                 @Override
                 public void onScrolled(RecyclerView recycler, int dx, int dy) {
-
                     if (!enableLoadMore) {
                         return;
                     }
