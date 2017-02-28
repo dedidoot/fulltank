@@ -15,3 +15,27 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
+
+
+
+-keep class retrofit2.** { *; }
+-keep class retrofit2.http.** { *; }
+-keep class retrofit2.client.** { *; }
+
+-keep interface retrofit2.** { *;}
+-keep interface com.squareup.** { *; }
+-dontwarn retrofit2.**
+-dontwarn okio.**
+
+
+# EventBus ====================
+-keepattributes *Annotation*
+-keepclassmembers class ** {
+    @org.greenrobot.eventbus.Subscribe <methods>;
+}
+-keep enum org.greenrobot.eventbus.ThreadMode { *; }
+
+# Only required if you use AsyncExecutor
+-keepclassmembers class * extends org.greenrobot.eventbus.util.ThrowableFailureEvent {
+    <init>(java.lang.Throwable);
+}
